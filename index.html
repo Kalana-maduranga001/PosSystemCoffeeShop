@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>POS System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+
+
+    body {
+      background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #f8f9fa;
+      overflow-x: hidden;
+      font-family: 'Pacifico', cursive;
+    }
+
+    /* Sidebar base */
+    nav.sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 80px;
+      background-color: rgba(0, 0, 0, 0.85);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 1000;
+    }
+
+    /* Show sidebar when checkbox is checked */
+    #toggleSidebar:checked ~ nav.sidebar {
+      transform: translateX(0);
+    }
+
+    /* Toggle button */
+    .sidebar-toggle-label {
+      position: fixed;
+      top: 50%; /* Center vertically */
+      left: 0;
+      transform: translateY(-50%); /* Adjust from the middle */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: white;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      cursor: pointer;
+      z-index: 1100;
+      transition: background-color 0.3s;
+    }
+
+    .sidebar-toggle-label:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    #toggleSidebar:checked + .sidebar-toggle-label i {
+      transform: rotate(180deg);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-link {
+      color: #f8f9fa !important;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      nav.sidebar {
+        width: 60px;
+      }
+
+      nav.sidebar .nav-link i {
+        font-size: 1.2rem;
+      }
+
+      nav.sidebar .nav-link {
+        padding: 8px;
+      }
+    }
+
+
+    /*Dashboard Clock and Date Styles */
+
+    #analog-clock {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .clock .hour,
+    .clock .minute,
+    .clock .second {
+      position: absolute;
+      width: 50%;
+      height: 2px;
+      background: white;
+      top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+    }
+
+    .clock .hour {
+      height: 4px;
+      background: #f8f9fa;
+    }
+
+    .clock .minute {
+      height: 3px;
+      background: #ced4da;
+    }
+
+    .clock .second {
+      height: 2px;
+      background: #adb5bd;
+    }
+
+    /*dashboard menu */
+
+
+    .barista-dashboard h2 {
+      font-family: 'Pacifico', cursive;
+      color: #fff;
+    }
+
+    .coffee-card {
+      position: relative;
+      height: 280px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      overflow: hidden;
+      color: white;
+      background: none;
+    }
+
+    /* Background image zoom effect */
+
+    .coffee-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 0;
+      animation: zoomInOut 8s ease-in-out infinite;
+    }
+
+    /* Dark overlay */
+    .coffee-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+
+    /* Content on top */
+    .coffee-card .card-body {
+      position: relative;
+      z-index: 2;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .coffee-card .card-title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      font-family: 'Pacifico', cursive;
+      color: #f8f8f8;
+      text-shadow: 0 0 8px #fff;
+    }
+
+    .coffee-card .card-text {
+      font-size: 1rem;
+      color: #ddd;
+    }
+
+    /* Zoom keyframes */
+    @keyframes zoomInOut {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+    .coffee-card.americano::after {
+      background-image: url('assets/Image/522979505-shutterstock_1973536478.png');
+    }
+
+    .coffee-card.espresso::after {
+      background-image: url('assets/Image/Espresso-Macchiato-Beitragsbild.jpg');
+    }
+
+    .coffee-card.cappuccino::after {
+      background-image: url('assets/Image/coffee.jpeg');
+    }
+
+
+
+    /*======== Coffee-Themed Table============ */
+
+
+    .table {
+      background-color: rgba(200, 140, 98, 0.1); /* Light coffee brown background */
+      color: #f1f1f1;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .table thead {
+      background-color: rgba(105, 52, 27, 0.7); /* Dark coffee brown for the header */
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .table th, .table td {
+      padding: 12px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter for even rows */
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(165, 85, 50, 0.2); /* Hover effect */
+    }
+
+    .table-bordered {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .card {
+      background-color: rgba(51, 30, 20, 0.5); /* Semi-transparent coffee card background */
+      color: #f1f1f1;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .form-label {
+      font-weight: bold;
+      color: #f8f3ef;
+    }
+
+    input.form-control,
+    textarea.form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #f1f1f1;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    input.form-control:focus,
+    textarea.form-control:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-color: #c88c62;
+      box-shadow: 0 0 5px rgba(200, 140, 98, 0.5);
+    }
+
+
+    @media (max-width: 576px) {
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      .form-label {
+        font-size: 0.9rem;
+      }
+
+      input.form-control,
+      textarea.form-control {
+        font-size: 0.9rem;
+        padding: 8px;
+      }
+
+      .btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+    }
+
+
+    /*======= end of table style ======*/
+
+    .btn {
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: #6c757d;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-secondary {
+      background-color: #adb5bd;
+    }
+
+
+
+    /*coffee Home Animation */
+
+    .home-bg {
+      background-color: rgba(34, 24, 19, 0.9); /* Deep coffee brown */
+      background-image: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1950&q=80'); /* Optional: Background image for coffee */
+      background-size: cover;
+      background-position: center;
+      color: #f8f9fa;
+      position: relative;
+      padding: 50px 0; /* Add space for padding */
+      height: auto; /* Allow content to adjust height as needed */
+      max-width: 100%;
+      overflow: hidden; /* Prevent any element from overflowing */
+      border-radius: 8px; /* Add a soft rounded corner to the section */
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow to make content pop */
+    }
+
+    .black-style{
+      color: #191818;
+      text-shadow:
+              0 0 5px white,
+              0 0 10px white,
+              0 0 15px white;
+
+      border: 2px solid white;
+      box-shadow:
+              0 0 5px white,
+              0 0 10px white,
+              0 0 15px white;
+
+      border-radius: 10px;
+      padding: 10px 15px;
+      display: inline-block;
+    }
+
+    /* Animated Text */
+    .animated-text {
+      font-size: 2.5rem;
+      font-weight: bold;
+      animation: fadeIn 2s ease-out infinite alternate; /* Text fading effect */
+      margin-bottom: 20px; /* Space between title and description */
+    }
+
+    /* FadeIn Animation */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Responsive Layout */
+    @media (max-width: 768px) {
+      .home-bg {
+        padding: 30px 10px; /* Adjust padding for mobile screens */
+      }
+
+      .animated-text {
+        font-size: 1.8rem; /* Adjust font size for smaller screens */
+      }
+    }
+
+    /* Improve form and table responsiveness at very small widths */
+    @media (max-width: 480px) {
+      .form-label {
+        font-size: 0.85rem;
+      }
+
+      .form-control,
+      .form-select,
+      textarea {
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+      }
+
+      .card-body .row > [class^="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+
+      table.table th,
+      table.table td {
+        font-size: 0.75rem;
+        padding: 6px;
+      }
+
+      .topbar {
+        font-size: 1.2em;
+        padding-left: 1rem;
+      }
+    }
+
+
+    /*setting section*/
+
+    .contact-card {
+      background: linear-gradient(135deg, #3e3e3e, #1a1a1a);
+      padding: 40px;
+      border-radius: 15px;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      animation: glowBorder 6s infinite alternate;
+    }
+
+    /* Title */
+    .contact-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      text-align: center;
+      animation: glowText 3s infinite ease-in-out;
+    }
+
+    /* Subtext */
+    .contact-subtext {
+      text-align: center;
+      font-size: 1rem;
+      color: #ccc;
+      margin-bottom: 30px;
+      animation: flicker 5s infinite alternate;
+    }
+
+    /* Form Layout */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .contact-form label {
+      display: block;
+    }
+
+    /* Inputs and Textarea */
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background-color: #2b2b2b;
+      color: white;
+      font-size: 1rem;
+      resize: none;
+      outline: none;
+      animation: pulse 4s infinite;
+    }
+
+    /* Button */
+    .contact-form button {
+      padding: 12px;
+      background-color: #d4a373;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #1a1a1a;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      animation: bounce 2s infinite;
+    }
+
+    .contact-form button:hover {
+      background-color: #e0b58c;
+    }
+
+    /* Animations */
+    @keyframes glowBorder {
+      0% { box-shadow: 0 0 10px #d4a373; }
+      100% { box-shadow: 0 0 25px #d4a373; }
+    }
+
+    @keyframes glowText {
+      0% { text-shadow: 0 0 5px #fff; }
+      100% { text-shadow: 0 0 15px #fff; }
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { background-color: #2b2b2b; }
+      50% { background-color: #333333; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /*about Section */
+
+    #About-content {
+      display: block;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .about-credits {
+      height: 100vh;
+      background-color: rgba(248, 246, 246, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #1c1c1c;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+      position: relative;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .credits-text {
+      position: absolute;
+      width: 100%;
+      animation: scroll-up 20s linear infinite;
+      text-align: center;
+      font-size: 1.2rem;
+      line-height: 2rem;
+      padding: 0 30px;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.75);
+    }
+
+    @keyframes scroll-up {
+      0% {
+        top: 100%;
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        top: -100%;
+        opacity: 0;
+      }
+    }
+
+    /* MOBILE FIX: Slow animation on smaller screens */
+    @media (max-width: 768px) {
+      .credits-text {
+        animation: scroll-up 50s linear infinite; /* Slower scroll for mobile */
+        font-size: 1rem;
+        line-height: 1.6rem;
+        padding: 0 20px;
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Hidden checkbox to control toggle -->
+    <input type="checkbox" id="toggleSidebar" hidden>
+
+    <!-- Toggle arrow label -->
+    <label for="toggleSidebar" class="sidebar-toggle-label">
+      <i class="bi bi-chevron-right"></i>
+    </label>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column align-items-center py-3">
+      <ul class="nav nav-pills flex-column mb-auto text-center">
+        <li class="nav-item">
+          <a href="#" class="nav-link active" aria-current="page" id="home-btn">
+            <i class="bi bi-cup-hot fs-4"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" id="dashboard-btn">
+            <i class="bi bi-clipboard-data fs-4"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" id="customer-btn">
+            <i class="bi bi-people fs-4"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" id="item-btn">
+            <i class="bi bi-cup-straw fs-4"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" id="order-btn">
+            <i class="bi bi-receipt-cutoff fs-4"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" id="settings-btn">
+            <i class="bi bi-gear-wide fs-4"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" id="About-btn">
+            <i class="bi bi-info-circle fs-4"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+
+    <!--home Page-->
+    <div class="col px-0">
+      <div class="topbar">
+        Home
+      </div>
+      <section id="home-content">
+        <div class="container mt-5">
+          <div class="p-5 text-center rounded-4 shadow home-bg">
+            <div class="black-style">
+              <h1 class="mb-3 animated-text" id="black-style">Welcome to Brew & Relax ☕</h1>
+              <p class="lead animated-text" style="font-size: 1.25rem;" >Where every cup is an experience.</p>
+              <p class="animated-text" style="max-width: 600px; margin: 0 auto;">
+                Come for the coffee, stay for the vibe. Let us brew your favorite drink while you enjoy the warmth of our cozy shop.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard stats -->
+      <section id="dashboard-content" style="display: none;">
+        <div class="container mt-3">
+          <div class="card mb-4">
+            <div class="card-body d-flex justify-content-between align-items-center">
+              <div class="date-time">
+                <p id="current-date" class="mb-1"></p>
+                <h2 id="current-time" class="fw-bold"></h2>
+              </div>
+              <div id="analog-clock">
+                <div class="clock">
+                  <div class="hour"></div>
+                  <div class="minute"></div>
+                  <div class="second"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--                barista menu dashboard-->
+
+        <!-- Customer Favorite Drinks Section -->
+        <section class="container mt-4">
+          <div class="barista-dashboard">
+            <h2 class="text-center mb-4">Our Customer Favorite Drinks</h2>
+            <div class="row g-4">
+
+              <!-- Americano -->
+              <div class="col-md-4">
+                <div class="card coffee-card americano">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Americano</h5>
+                    <p class="card-text">Smooth and bold, hot or iced.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Espresso -->
+              <div class="col-md-4">
+                <div class="card coffee-card espresso">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Espresso</h5>
+                    <p class="card-text">Pure intensity in a small shot.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cappuccino -->
+              <div class="col-md-4">
+                <div class="card coffee-card cappuccino">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Cappuccino</h5>
+                    <p class="card-text">Rich foam and warm comfort.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+      <!--customer content-->
+      <section id="customer-content" style="display: none;">
+        <div class="container mt-3 form-wrapper">
+          <div class="card mb-4">
+            <div class="card-body">
+              <form class="row g-3">
+
+                <div class="col-md-6">
+                  <label for="cus-id" class="form-label">ID</label>
+                  <input type="text" class="form-control" id="cus-id" readonly>
+                </div>
+
+                <div class="col-md-3">
+                  <label for="fname" class="form-label">First Name</label>
+                  <input type="text" class="form-control" id="fname">
+                </div>
+
+                <div class="col-md-3">
+                  <label for="lname" class="form-label">Last Name</label>
+                  <input type="text" class="form-control" id="lname">
+                </div>
+
+                <div class="col-md-3">
+                  <label for="phone" class="form-label">Phone</label>
+                  <input type="tel" class="form-control" id="phone">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="address" class="form-label">Address</label>
+                  <input type="text" class="form-control" id="address">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="email" class="form-label">E-mail</label>
+                  <input type="email" class="form-control" id="email">
+                </div>
+
+                <div class="col-12 text-end">
+                  <button id="customer_save" type="button" class="btn btn-success me-2">Save</button>
+                  <button id="customer_update" type="button" class="btn btn-primary me-2">Update</button>
+                  <button id="customer_delete" type="button" class="btn btn-danger me-2">Delete</button>
+                  <button id="customer_reset" type="button" class="btn btn-secondary">Reset</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <h5 class="text-light mb-3">Customer List</h5>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+              <tr>
+                <th>Id</th>
+                <th>First</th>
+                <th>Last</th>
+                <th>Address</th>
+                <th>E-mail</th>
+                <th>Phone</th>
+              </tr>
+              </thead>
+              <tbody id="customer-tbody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!--item content-->
+      <section id="item-content" style="display: none;">
+        <div class="container mt-3 form-wrapper">
+          <div class="card mb-4">
+            <div class="card-body">
+              <form class="row g-3">
+
+                <div class="col-md-3">
+                  <label for="item-id" class="form-label">ID</label>
+                  <input type="text" class="form-control" id="item-id" readonly>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="item" class="form-label">Item</label>
+                  <input type="text" class="form-control" id="item">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="qty" class="form-label">Quantity</label>
+                  <input type="text" class="form-control" id="qty">
+                </div>
+
+                <div class="col-md-4">
+                  <label for="price" class="form-label">Price</label>
+                  <input type ="text" class="form-control" id="price">
+                </div>
+
+                <div class="col-12">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" rows="3"></textarea>
+                </div>
+
+                <div class="col-12 text-end">
+                  <button id="item_save"   type="button" class="btn btn-success me-2">Save</button>
+                  <button id="item_update" type="button" class="btn btn-primary me-2">Update</button>
+                  <button id="item_delete" type="button" class="btn btn-danger me-2">Delete</button>
+                  <button id="item_reset"  type="button" class="btn btn-secondary">Reset</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <h5>Item List</h5>
+          <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody id="item-tbody">
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- place order content -->
+      <section id="order-content" style="display: none;">
+        <div class="container mt-3 form-wrapper">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <label for="order-id" class="form-label">Order ID</label>
+              <input type="text" class="form-control" id="order-id" readonly>
+            </div>
+
+            <div class="col-md-6">
+              <label for="order-date" class="form-label">Order Date</label>
+              <input type="date" class="form-control" id="order-date">
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <!-- customer details -->
+            <div class="col-md-6">
+              <div class="card h-100">
+                <div class="card-header">Customer Details</div>
+                <div class="card-body">
+                  <div class="row g-2 align-items-end mb-3">
+                    <div class="col-md-6">
+                      <label for="search-cus-id" class="form-label">Search Customer ID</label>
+                      <div class="input-group">
+                        <input type="text" class="form-control" id="search-cus-id" placeholder="Enter Customer ID">
+                        <button class="btn btn-outline-primary" type="button" id="search-cus-btn">Search</button>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="order-customer" class="form-label">Select Customer</label>
+                      <select class="form-select" id="order-customer">
+                        <option selected disabled>Choose...</option>
+                      </select>
+                    </div>
+
+                  </div>
+                  <div class="mb-2">
+                    <label for="cus-name" class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="cus-name" readonly>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- item details -->
+            <div class="col-md-6">
+              <div class="card h-100">
+                <div class="card-header">Item Details</div>
+                <div class="card-body">
+                  <div class="row g-2 mb-3 align-items-end">
+                    <div class="col-md-4">
+                      <label for="search-item-id" class="form-label">Search Item ID</label>
+                      <div class="input-group">
+                        <input type="text" class="form-control" id="search-item-id" placeholder="Enter Item ID">
+                        <button class="btn btn-outline-primary" type="button" id="search-item-btn">Search</button>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="order-item" class="form-label">Select Item</label>
+                      <select class="form-select" id="order-item">
+                        <option selected disabled>Choose...</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="item-name" class="form-label">Item Name</label>
+                      <input type="text" class="form-control" id="item-name" readonly>
+                    </div>
+                  </div>
+
+                  <div class="row g-2">
+                    <div class="col-md-3">
+                      <label for="unit-price" class="form-label">Unit Price</label>
+                      <input type="number" step="0.01" class="form-control" id="unit-price" readonly>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="qoh" class="form-label">Quantity On Hand</label>
+                      <input type="number" class="form-control" id="qoh" readonly>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="order-qty" class="form-label">Order Quantity</label>
+                      <input type="number" class="form-control" id="order-qty" min="1">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                      <button type="button" class="btn btn-success w-100" id="add-to-cart">Add to Cart</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-9">
+              <table class="table table-bordered">
+                <thead class="table-dark">
+                <tr>
+                  <th>Item ID</th>
+                  <th>Item Name</th>
+                  <th>Qty</th>
+                  <th>Unit Price</th>
+                  <th>Total Price</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="order-summary">
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Summary</h5>
+                  <div class="mb-3">
+                    <label for="subtotal" class="form-label">Subtotal</label>
+                    <input type="text" id="subtotal" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="discount" class="form-label">Discount (%)</label>
+                    <input type="number" id="discount" class="form-control" value="0">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="discount-amount">Discount Amount</label>
+                    <input type="text" id="discount-amount" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="total" class="form-label">Total</label>
+                    <input type="text" id="total" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="cash" class="form-label">Cash</label>
+                    <input type="text" id="cash" class="form-control">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="order-balance" class="form-label">Balance:</label>
+                    <input type="text" id="order-balance" class="form-control" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 text-end buttons mt-4">
+            <button id="order_place" type="button" class="btn btn-success me-2">Place Order</button>
+            <button id="order_reset" type="button" class="btn btn-secondary">Reset</button>
+          </div>
+
+          <h5 class="mt-5">Order History</h5>
+          <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Customer</th>
+              <th>Total</th>
+              <th>Date</th>
+            </tr>
+            </thead>
+            <tbody id="order-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!--setting Section-->
+      <section id="Setting-content" style="display: none;">
+        <div class="container mt-5">
+          <div class="contact-card">
+            <h2 class="contact-title">Need Help? Contact Us</h2>
+            <p class="contact-subtext">If you're facing any issues with the website or have suggestions, we’d love to hear from you!</p>
+            <form class="contact-form">
+              <label>
+                <input type="text" placeholder="Your Name" required>
+              </label>
+              <label>
+                <input type="email" placeholder="Your Email" required>
+              </label>
+              <label>
+                <textarea placeholder="Describe your issue..." rows="5" required></textarea>
+              </label>
+              <button type="submit">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!--             about Section-->
+      <section id="About-content" style="display: none;">
+        <div class="about-credits">
+          <div class="credits-text">
+            <p>Kalana Maduranga</p>
+            <p>I am a passionate and dedicated Full Stack Developer with a deep love for building modern, user-friendly, and efficient web applications. With expertise spanning from intuitive frontend interfaces to robust backend systems, I specialize in delivering clean, maintainable, and scalable code. I believe technology should not only solve problems but also inspire. Over the years, I’ve mastered working with modern stacks and frameworks, and I’m always exploring new tools to enhance user experience and performance. Whether it’s crafting responsive designs, setting up powerful APIs, or integrating complex databases, I aim to create digital solutions that matter. I take pride in my attention to detail, my commitment to clean code, and my constant drive to learn and evolve in this ever-changing field. Let’s build the future — one line of code at a time.</p>
+            <p>© 2025 All Rights Reserved, Kalana®</p>
+          </div>
+        </div>
+      </section>
+
+      <!--            <audio id="background-music" preload="auto" loop>-->
+      <!--&lt;!&ndash;                <source src="./assets/Adieo/1-01.%20Key.mp3" type="audio/mpeg">&ndash;&gt;-->
+      <!--                Your browser does not support the audio element.-->
+      <!--            </audio>-->
+
+    </div>
+  </div>
+</div>
+
+
+<script src="./assets/lib/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="Controll/CustomerController.js" type="module"></script>
+<script src="Controll/itemController.js" type="module"></script>
+<script src="Controll/dashbordController.js" type="module"></script>
+<script src="Controll/OrderController.js" type="module"></script>
+
+<script>
+  function showSection(sectionId, title, element) {
+    $('#home-content, #dashboard-content, #customer-content, #item-content, #order-content, #Setting-content, #About-content').hide();
+    $(sectionId).show();
+    $('.topbar').text(title);
+    $('.nav-link').removeClass('active');
+    $(element).addClass('active');
+  }
+
+  // Event listeners for each button
+  $('#home-btn').on('click', function () {
+    showSection('#home-content', 'Home', this);
+  });
+
+  $('#customer-btn').on('click', function () {
+    showSection('#customer-content', 'Customer', this);
+  });
+
+  $('#dashboard-btn').on('click', function () {
+    showSection('#dashboard-content', 'Dashboard', this);
+  });
+
+  $('#item-btn').on('click', function () {
+    showSection('#item-content', 'Item', this);
+  });
+
+  $('#order-btn').on('click', function () {
+    showSection('#order-content', 'Place Order', this);
+  });
+
+  $('#settings-btn').on('click', function () {
+    showSection('#Setting-content', 'Setting', this);
+  });
+
+  $('#About-btn').on('click', function () {
+    showSection('#About-content', 'About', this);
+  });
+
+  // // Background music setup and autoplay on first click or touch
+  // const music = document.getElementById('background-music');
+  // const startMusic = () => {
+  //     music.play().catch(e => {
+  //         console.log("Autoplay blocked:", e);
+  //     });
+  //     document.removeEventListener('click', startMusic);
+  //     document.removeEventListener('touchstart', startMusic);
+  // };
+  //
+  // document.addEventListener('click', startMusic);
+  // document.addEventListener('touchstart', startMusic);
+
+</script>
+
+</body>
+</html>
