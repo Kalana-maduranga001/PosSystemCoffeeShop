@@ -341,7 +341,7 @@
       max-width: 100%;
       overflow: hidden; /* Prevent any element from overflowing */
       border-radius: 8px; /* Add a soft rounded corner to the section */
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow to make content pop */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow to make content pop */
     }
 
     .black-style{
@@ -1007,18 +1007,77 @@
             <button id="order_reset" type="button" class="btn btn-secondary">Reset</button>
           </div>
 
-          <h5 class="mt-5">Order History</h5>
-          <table class="table table-bordered">
-            <thead class="table-dark">
-            <tr>
-              <th>#</th>
-              <th>Customer</th>
-              <th>Total</th>
-              <th>Date</th>
-            </tr>
-            </thead>
-            <tbody id="order-tbody"></tbody>
-          </table>
+          <div class="row mt-4">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-header">Order Search</div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="search-order-id" class="form-label">Search Order ID</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="search-order-id" placeholder="Enter Order ID">
+                      <button class="btn btn-outline-primary" type="button" id="search-order-btn">Search</button>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="date-order">Order Date</label>
+                    <input type="text" id="date-order" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="order-cus-id">Customer ID</label>
+                    <input type="text" id="order-cus-id" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="order-cus-name">Customer Name</label>
+                    <input type="text" id="order-cus-name" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="order-discount" class="form-label">Discount (%)</label>
+                    <input type="number" id="order-discount" class="form-control" value="0" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="order-discount-amount">Discount Amount</label>
+                    <input type="text" id="order-discount-amount" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="order-total" class="form-label">Total</label>
+                    <input type="text" id="order-total" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="order-cash" class="form-label">Cash</label>
+                    <input type="text" id="order-cash" class="form-control" readonly>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="balance-order" class="form-label">Balance:</label>
+                    <input type="text" id="balance-order" class="form-control" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-9">
+              <h4 class="mb-3">Order History</h4>
+              <table class="table table-bordered">
+                <thead class="table-dark">
+                <tr>
+                  <th>#</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Date</th>
+                </tr>
+                </thead>
+                <tbody id="order-tbody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1055,10 +1114,10 @@
         </div>
       </section>
 
-      <!--            <audio id="background-music" preload="auto" loop>-->
-      <!--&lt;!&ndash;                <source src="./assets/Adieo/1-01.%20Key.mp3" type="audio/mpeg">&ndash;&gt;-->
-      <!--                Your browser does not support the audio element.-->
-      <!--            </audio>-->
+                  <audio id="background-music" preload="auto" loop>
+                      <source src="./assets/Adieo/1-01.%20Key.mp3" type="audio/mpeg">
+                      Your browser does not support the audio element.
+                  </audio>
 
     </div>
   </div>
@@ -1074,7 +1133,10 @@
 <script src="./Controll/dashbordController.js" type="module"></script>
 <script src="./Controll/OrderController.js" type="module"></script>
 
-<script>
+<script type="module">
+  import { customer_db } from "/db/db.js";
+  import { item_db } from "/db/db.js";
+
   function showSection(sectionId, title, element) {
     $('#home-content, #dashboard-content, #customer-content, #item-content, #order-content, #Setting-content, #About-content').hide();
     $(sectionId).show();
@@ -1102,6 +1164,23 @@
 
   $('#order-btn').on('click', function () {
     showSection('#order-content', 'Place Order', this);
+
+
+      const cmbCustomers = $('#order-customer');
+      cmbCustomers.empty().append('<option selected disabled>Choose...</option>');
+
+      customer_db.forEach((item) => {
+        cmbCustomers.append(`<option value="${item.id}">${item.id}</option>`);
+      });
+
+      const cmbItems = $('#order-item');
+      cmbItems.empty().append('<option selected disabled>Choose...</option>');
+
+      item_db.forEach((item) => {
+        cmbItems.append(`<option value="${item.id}">${item.id}</option>`);
+      });
+
+
   });
 
   $('#settings-btn').on('click', function () {
@@ -1112,18 +1191,18 @@
     showSection('#About-content', 'About', this);
   });
 
-  // // Background music setup and autoplay on first click or touch
-  // const music = document.getElementById('background-music');
-  // const startMusic = () => {
-  //     music.play().catch(e => {
-  //         console.log("Autoplay blocked:", e);
-  //     });
-  //     document.removeEventListener('click', startMusic);
-  //     document.removeEventListener('touchstart', startMusic);
-  // };
-  //
-  // document.addEventListener('click', startMusic);
-  // document.addEventListener('touchstart', startMusic);
+  // Background music setup and autoplay on first click or touch
+  const music = document.getElementById('background-music');
+  const startMusic = () => {
+      music.play().catch(e => {
+          console.log("Autoplay blocked:", e);
+      });
+      document.removeEventListener('click', startMusic);
+      document.removeEventListener('touchstart', startMusic);
+  };
+
+  document.addEventListener('click', startMusic);
+  document.addEventListener('touchstart', startMusic);
 
 </script>
 
