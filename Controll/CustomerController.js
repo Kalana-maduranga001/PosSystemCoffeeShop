@@ -1,5 +1,5 @@
 import { customer_db } from "/db/db.js";
-import CustomerModel from "/model/CustomerModel.js";
+import CustomerModel from "/Model/CustomerModel.js";
 
 let selectedIndex = -1;
 

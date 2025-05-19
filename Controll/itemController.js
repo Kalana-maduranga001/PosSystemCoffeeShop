@@ -1,5 +1,5 @@
 import {item_db} from "/db/db.js";
-import ItemModel from "/model/ItemModel.js";
+import ItemModel from "/Model/ItemModel.js";
 
 let selectedIndex = -1;
 
