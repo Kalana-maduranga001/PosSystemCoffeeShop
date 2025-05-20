@@ -49,12 +49,33 @@ function validateCustomer({ id, fname, lname, address }) {
     return id && fname && lname && address;
 }
 
+
 $(document).ready(() => {
     loadCustomers();
     resetCustomerForm();
 
     $('#customer_save').on('click', () => {
         const customer = getFormData();
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^(?:\+94|0)?7\d{8}$/;
+        let isValid = true;
+
+        if (!emailRegex.test(customer.email)) {
+            $('#email-error').text("Invalid email format (e.g., name@example.com)");
+            isValid = false;
+        } else {
+            $('#email-error').text("");
+        }
+
+        if (!phoneRegex.test(customer.phone)) {
+            $('#phone-error').text("Invalid phone (e.g., 0712345678 or +94712345678)");
+            isValid = false;
+        } else {
+            $('#phone-error').text("");
+        }
+
+        if (!isValid) return;
 
         if (!validateCustomer(customer)) {
             Swal.fire("Error!", "Please fill required fields", "error");
@@ -132,3 +153,4 @@ $(document).ready(() => {
         }
     });
 });
+
