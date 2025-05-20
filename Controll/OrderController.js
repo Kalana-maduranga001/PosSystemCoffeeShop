@@ -45,6 +45,15 @@ function generateNextOrderId() {
     $('#subtotal').val('');
     $('#cash').val('');
     $('#order-balance').val('');
+    $('#search-order-id').val('');
+    $('#date-order').val('');
+    $('#order-cus-id').val('');
+    $('#order-cus-name').val('');
+    $('#order-discount').val('');
+    $('#order-discount-amount').val('');
+    $('#order-total').val('');
+    $('#order-cash').val('');
+    $('#balance-order').val('');
 
     loadCustomersCmb();
     loadItemsCmb();
